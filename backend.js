@@ -48,18 +48,39 @@ app.get('/', (req, res) => {
 
 app.get('/users', (req, res) => {
 	const name = req.query.name;
+	const job = req.query.job;
+	
 	if (name != undefined){
-		let result = findUserByName(name);
+		let result1 = findUserByName(name);
+		result1 = {users_list: result1};
+		if (job != undefined) {
+			let result2 = findUserByJob(job);
+			result2 = {users_list: result2};
+			let result = result1['users_list'].filter( (user) => result2['users_list'].includes(user));
+			result = {users_list: result};
+			res.send(result);
+		}
+		else 
+			res.send(result1);
+	}
+
+	else if (job != undefined){
+		result = findUserByJob(job);
 		result = {users_list: result};
 		res.send(result);
 	}
-	else{
+	
+	else
 		res.send(users);
-	}
+
 });
 
 const findUserByName = (name) => {
-	return users['users_list'].filter( (user) =>user['name'] === name);
+	return users['users_list'].filter( (user) => user['name'] === name);
+}
+
+const findUserByJob = (job) => {
+	return users['users_list'].filter( (user) => user['job'] === job);
 }
 
 app.get('/users/:id', (req, res) => {
@@ -89,6 +110,13 @@ app.post('/users', (req, res) => {
 function addUser(user){
 	users['users_list'].push(user);
 }
+
+app.delete('/users/:id', (req, res) => {
+	const id = req.params['id']; //or req.params.id
+	let result = findUserById(id);
+	users['users_list'].splice(users['users_list'].indexOf(result), 1);
+	res.status(204).end();
+})
 
 //backend server listens to http requests on defined port #
 app.listen(port, ()=> {
