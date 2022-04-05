@@ -58,6 +58,10 @@ app.get('/users', (req, res) => {
 	}
 });
 
+const findUserByName = (name) => {
+	return users['users_list'].filter( (user) =>user['name'] === name);
+}
+
 app.get('/users/:id', (req, res) => {
 	const id = req.params['id']; //or req.params.id
 	let result = findUserById(id);
@@ -74,8 +78,16 @@ function findUserById(id) {
 	// OR return users['users_list'].filter( (user) => user['id'] === id);
 	//.find returns first occurence only, since we are assuming unique ids, this is fine
 }
-const findUserByName = (name) => {
-	return users['users_list'].filter( (user) =>user['name'] === name);
+
+
+app.post('/users', (req, res) => {
+	const userToAdd = req.body;
+	addUser(userToAdd);
+	res.status(200).end();
+});
+
+function addUser(user){
+	users['users_list'].push(user);
 }
 
 //backend server listens to http requests on defined port #
