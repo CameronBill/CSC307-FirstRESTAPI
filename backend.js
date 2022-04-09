@@ -38,6 +38,10 @@ const users = {
 	]
 };
 
+const cors = require('cors');
+
+app.use(cors());
+
 //process incoming data in json format
 app.use(express.json());
 
