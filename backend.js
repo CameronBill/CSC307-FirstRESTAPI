@@ -126,8 +126,12 @@ function addUser(user){
 app.delete('/users/:id', (req, res) => {
 	const id = req.params['id']; //or req.params.id
 	let result = findUserById(id);
-	users['users_list'].splice(users['users_list'].indexOf(result), 1);
-	res.status(204).end();
+	if (result === undefined || result.length == 0)
+		res.status(404).send('Resource not found.');
+	else {
+		users['users_list'].splice(users['users_list'].indexOf(result), 1);
+		res.status(204).end();
+	}
 })
 
 //backend server listens to http requests on defined port #
