@@ -106,9 +106,17 @@ function findUserById(id) {
 
 
 app.post('/users', (req, res) => {
-	const userToAdd = req.body;
+	var userToAdd = req.body;
+	var newId = '';
+	for (let i = 0; i < 3; i++) {
+		newId += String.fromCharCode(97 + Math.floor(Math.random() * 26));
+	}
+	for (let i = 0; i < 3; i++) {
+		newId += String(Math.floor(Math.random() * 10));
+	}
+	userToAdd.id = newId;
 	addUser(userToAdd);
-	res.status(200).end();
+	res.status(201).send(userToAdd);
 });
 
 function addUser(user){
